@@ -1,5 +1,7 @@
 # Taller de Gorros · Personalizador 3D
 
+🌐 **Página en vivo:** https://alemendrap.github.io/gorros-navidenos-3d/
+
 Aplicación web (React + TypeScript + Vite + Three.js / React Three Fiber) para que los clientes
 de la villa navideña diseñen su gorro en 3D: lo giran 360°, hacen zoom, escriben su nombre en
 vinilo dorado, añaden decoraciones, guardan el diseño y confirman el pedido.
