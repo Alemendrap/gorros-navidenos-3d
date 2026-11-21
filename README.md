@@ -121,15 +121,20 @@ Cada zona define: `id`, `name`, posición (`anchor.azimuthDeg` 0 = frente, 90 = 
    ```
    Si el archivo no carga, la app muestra el gorro provisional en su lugar.
 
-### WhatsApp: factura y diseño (`src/config/app.ts` → `whatsapp`)
-Al confirmar, el cliente envía **dos mensajes** (WhatsApp se abre con el texto ya escrito; solo pulsa Enviar):
-1. **Factura** → número de **cobro** (`whatsapp.cobro.number`, hoy 322 747 7433): detalle, precios y total.
-2. **Diseño** → número del **taller** (`whatsapp.taller.number`, hoy 322 460 2713): textos, zonas, medidas en cm,
-   giros y un **enlace para ver el gorro en 3D** con la ficha de producción. La imagen se copia al portapapeles
-   para pegarla en el chat (o se comparte con el botón «Compartir la imagen del diseño»).
+### WhatsApp: destinatarios del pedido (`src/config/app.ts` → `whatsapp.recipients`)
+Al confirmar, un **solo botón** va abriendo cada chat con el mensaje ya escrito
+(el cliente pulsa Enviar en WhatsApp y vuelve a la página para el siguiente):
 
-Los números van con el 57 delante, sin "+" ni espacios. Cuando publiques la página, pon su dirección en
-`publicUrl` (ej. `https://gorros.netlify.app/`) para que el enlace 3D del taller apunte ahí.
+| # | Destinatario | Número | Recibe |
+|---|---|---|---|
+| 1 | Cobro | 322 747 7433 | Factura: detalle de precios y total |
+| 2 | Taller | 322 460 2713 | Diseño: textos, zonas, medidas en cm y enlace 3D |
+| 3 | Copia del pedido | 310 663 0055 | Factura + diseño |
+
+Para cambiar, añadir o quitar destinatarios edita esa lista (número con 57 delante, sin "+").
+El avance del envío se guarda: si el celular recarga la página al volver de WhatsApp, continúa donde iba.
+WhatsApp no permite que una página envíe mensajes sola: el envío 100 % automático requiere la
+API de WhatsApp Business con un servidor.
 
 ## 5. Flujo del cliente
 Inicio → personalizar (Nombre · Diseños · Zonas, con total en vivo) → Resumen de compra

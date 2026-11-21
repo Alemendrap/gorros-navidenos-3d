@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Viewer } from '@/viewer/Viewer';
 import { cameraActions } from '@/viewer/sceneBridge';
 import { readSharedDesignFromUrl } from '@/lib/designLink';
+import { useOrderStore } from '@/orders/orderStore';
 import { useDesign } from '@/store/designStore';
 import { preloadFonts } from '@/engine/fontLoader';
 import { useAppHeight } from '@/lib/useAppHeight';
@@ -19,6 +20,8 @@ export default function App() {
     // Enlace de diseño recibido por el taller (#d=...): se abre directamente en la vista de producción.
     const shared = readSharedDesignFromUrl();
     if (shared) useDesign.getState().openShared(shared.design, shared.code);
+    // Si el celular recargó la página al volver de WhatsApp, se retoma el envío del pedido.
+    else if (location.hash === '#confirm' && useOrderStore.getState().order) useDesign.getState().go('confirm');
   }, []);
   // La revisión final siempre empieza mirando el gorro de frente.
   useEffect(() => { if (screen === 'preview') cameraActions.reset(); }, [screen]);

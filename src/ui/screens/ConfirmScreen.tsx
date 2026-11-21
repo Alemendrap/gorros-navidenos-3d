@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import { useOrderStore } from '@/orders/orderStore';
 import { useDesign } from '@/store/designStore';
 import { PriceSummary } from '../components/PriceSummary';
-import { copyImageToClipboard, invoiceLink, productionLink, shareDesignImage } from '@/orders/whatsapp';
-import { formatPrice } from '@/orders/pricing';
+import { copyImageToClipboard, recipientLink, shareDesignImage, type Recipient } from '@/orders/whatsapp';
 import { downloadDataUrl, downloadJson } from '@/export/imageExport';
 import { appConfig } from '@/config';
 import { Icon } from '../components/Icon';
@@ -14,11 +12,11 @@ const phone = (n: string) => {
 };
 
 export function ConfirmScreen() {
-  const { order, image } = useOrderStore();
+  const { order, image, sent, markSent } = useOrderStore();
   const go = useDesign((s) => s.go);
   const resetDesign = useDesign((s) => s.resetDesign);
   const notify = useDesign((s) => s.notify);
-  const [sent, setSent] = useState({ cobro: false, taller: false });
+  const recipients = appConfig.whatsapp.recipients;
 
   if (!order) {
     return (
@@ -28,10 +26,13 @@ export function ConfirmScreen() {
     );
   }
 
-  const onTaller = async () => {
-    setSent((s) => ({ ...s, taller: true }));
-    if (image && (await copyImageToClipboard(image))) {
-      notify('Imagen copiada: pégala en el chat del taller', 'ok');
+  const next = recipients.find((r) => !sent[r.id]);
+  const done = recipients.filter((r) => sent[r.id]).length;
+
+  const onSend = async (r: Recipient) => {
+    markSent(r.id);
+    if (r.message !== 'factura' && image && (await copyImageToClipboard(image))) {
+      notify('Imagen del diseño copiada: puedes pegarla en el chat', 'ok');
     }
   };
 
@@ -47,35 +48,63 @@ export function ConfirmScreen() {
         <div className="text-center animate-fadeUp">
           <p className="text-[11px] font-semibold uppercase tracking-[.3em] text-oro-dark">{appConfig.villageName}</p>
           <h1 className="mt-1 font-display text-4xl font-semibold text-navidad-dark">¡Tu diseño está listo!</h1>
-          <p className="mt-1 text-sm text-tinta/60">Envía los dos mensajes para completar tu pedido.</p>
+          <p className="mt-1 text-sm text-tinta/60">Envía tu pedido por WhatsApp para completarlo.</p>
         </div>
 
         <div className="mt-5 space-y-3 animate-fadeUp">
-          <StepCard
-            n={1}
-            done={sent.cobro}
-            title="Enviar factura para el pago"
-            detail={`Total ${formatPrice(order.pricing.total)} · a ${phone(appConfig.whatsapp.cobro.number)}`}
-            href={invoiceLink(order)}
-            onClick={() => setSent((s) => ({ ...s, cobro: true }))}
-            testId="send-invoice"
-          />
-          <StepCard
-            n={2}
-            done={sent.taller}
-            title="Enviar diseño al taller"
-            detail={`Textos, posiciones y enlace 3D · a ${phone(appConfig.whatsapp.taller.number)}`}
-            href={productionLink(order)}
-            onClick={onTaller}
-            testId="send-design"
-          />
+          {next ? (
+            <a
+              href={recipientLink(order, next)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => onSend(next)}
+              data-testid="send-next"
+              className="flex items-center gap-3 rounded-2xl bg-[#1F7A4D] p-4 text-white shadow-lg transition hover:bg-[#23905a] active:scale-[.98]"
+            >
+              <Icon name="whatsapp" size={30} />
+              <span className="min-w-0 flex-1">
+                <span className="block text-lg font-semibold leading-tight">
+                  {done === 0 ? 'Enviar pedido por WhatsApp' : 'Continuar envío'}
+                </span>
+                <span className="block text-sm text-white/85">
+                  Mensaje {done + 1} de {recipients.length} · {next.label} ({phone(next.number)})
+                </span>
+              </span>
+              <Icon name="next" size={22} />
+            </a>
+          ) : (
+            <div className="flex items-center gap-3 rounded-2xl border border-pino/30 bg-pino/10 p-4" data-testid="all-sent">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-pino text-white"><Icon name="check" size={22} /></span>
+              <span>
+                <span className="block font-semibold">¡Pedido enviado!</span>
+                <span className="block text-sm text-tinta/60">Se abrieron los {recipients.length} chats de WhatsApp.</span>
+              </span>
+            </div>
+          )}
+
+          <ol className="card divide-y divide-tinta/5">
+            {recipients.map((r, i) => (
+              <li key={r.id} className="flex items-center gap-3 px-4 py-2.5">
+                <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${sent[r.id] ? 'bg-pino text-white' : 'bg-tinta/10 text-tinta/60'}`}>
+                  {sent[r.id] ? <Icon name="check" size={14} /> : i + 1}
+                </span>
+                <span className="min-w-0 flex-1 text-sm">
+                  <b>{r.label}</b> · {phone(r.number)}
+                  <span className="block text-xs text-tinta/50">{r.message === 'factura' ? 'Factura para el cobro' : r.message === 'diseno' ? 'Diseño para fabricar (con enlace 3D)' : 'Factura + diseño'}</span>
+                </span>
+                <a href={recipientLink(order, r)} target="_blank" rel="noopener noreferrer" onClick={() => onSend(r)} className="text-xs font-semibold text-pino underline" data-testid={`send-${r.id}`}>
+                  {sent[r.id] ? 'Reenviar' : 'Enviar'}
+                </a>
+              </li>
+            ))}
+          </ol>
           {image && (
             <button className="btn-outline w-full" onClick={shareImage}>
               <Icon name="share" size={18} /> Compartir la imagen del diseño
             </button>
           )}
           <p className="text-center text-[11px] text-tinta/50">
-            Se abre WhatsApp con el mensaje ya escrito: solo pulsa <b>Enviar</b>.
+            WhatsApp se abre con el mensaje ya escrito: pulsa <b>Enviar</b> y vuelve aquí para el siguiente.
           </p>
         </div>
 
@@ -107,29 +136,5 @@ export function ConfirmScreen() {
         <p className="mt-6 text-center text-[11px] text-tinta/45">Precios en pesos colombianos.</p>
       </div>
     </div>
-  );
-}
-
-function StepCard({ n, done, title, detail, href, onClick, testId }: {
-  n: number; done: boolean; title: string; detail: string; href: string; onClick: () => void; testId: string;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={onClick}
-      data-testid={testId}
-      className={`flex items-center gap-3 rounded-2xl p-3.5 text-left shadow-sm transition active:scale-[.98] ${done ? 'border border-pino/30 bg-pino/10 text-tinta' : 'bg-[#1F7A4D] text-white hover:bg-[#23905a]'}`}
-    >
-      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold ${done ? 'bg-pino text-white' : 'bg-white/20'}`}>
-        {done ? <Icon name="check" size={20} /> : n}
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block font-semibold">{title}</span>
-        <span className={`block truncate text-xs ${done ? 'text-tinta/60' : 'text-white/80'}`}>{done ? 'Abierto en WhatsApp · toca para volver a enviar' : detail}</span>
-      </span>
-      <Icon name="whatsapp" size={22} />
-    </a>
   );
 }

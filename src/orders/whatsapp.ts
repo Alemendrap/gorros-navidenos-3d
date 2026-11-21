@@ -1,7 +1,6 @@
 /**
- * WHATSAPP: dos mensajes por pedido.
- *  1. FACTURA → número de cobro (appConfig.whatsapp.cobro)
- *  2. DISEÑO  → número del taller (appConfig.whatsapp.taller), con enlace para verlo en 3D.
+ * WHATSAPP: un mensaje por destinatario (appConfig.whatsapp.recipients):
+ *  factura (cobro), diseño con enlace 3D (taller) o pedido completo (copia).
  *
  * Los enlaces wa.me abren el chat del número con el texto ya escrito; el cliente solo pulsa "Enviar".
  * (WhatsApp no permite adjuntar imágenes por enlace: la imagen se copia al portapapeles
@@ -73,8 +72,15 @@ export function whatsappLink(number: string, text: string) {
   return `https://wa.me/${n}?text=${encodeURIComponent(text)}`;
 }
 
-export const invoiceLink = (order: Order) => whatsappLink(appConfig.whatsapp.cobro.number, buildInvoiceMessage(order));
-export const productionLink = (order: Order) => whatsappLink(appConfig.whatsapp.taller.number, buildProductionMessage(order));
+export type Recipient = (typeof appConfig.whatsapp.recipients)[number];
+
+export function messageFor(order: Order, r: Recipient) {
+  if (r.message === 'factura') return buildInvoiceMessage(order);
+  if (r.message === 'diseno') return buildProductionMessage(order);
+  return `${buildInvoiceMessage(order)}\n\n————————————\n\n${buildProductionMessage(order)}`;
+}
+
+export const recipientLink = (order: Order, r: Recipient) => whatsappLink(r.number, messageFor(order, r));
 
 /** Copia la imagen del diseño al portapapeles (para pegarla en el chat). */
 export async function copyImageToClipboard(dataUrl: string) {

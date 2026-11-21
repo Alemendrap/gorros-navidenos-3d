@@ -22,16 +22,20 @@ export const appConfig = {
   },
 
   /**
-   * WHATSAPP — al confirmar, el cliente envía dos mensajes:
-   *  - cobro: la FACTURA (detalle y total) para quien recibe el pago.
-   *  - taller: el DISEÑO (textos, posiciones, imagen y enlace 3D) para quien fabrica el gorro.
-   * Formato internacional sin "+" ni espacios: 57 + número de celular (ej. "573001234567").
-   * Si un número queda vacío, WhatsApp deja que el cliente elija el contacto.
+   * WHATSAPP — destinatarios del pedido, en el orden en que el cliente los envía.
+   * Un solo botón va abriendo cada chat con el mensaje ya escrito.
+   *   message: 'factura'  → detalle de precios y total (para cobrar)
+   *            'diseno'   → textos, medidas, zonas y enlace 3D (para fabricar)
+   *            'completo' → factura + diseño en un solo mensaje
+   * Número: 57 + celular, sin "+" ni espacios. Para quitar un destinatario, borra su bloque.
    */
   whatsapp: {
-    cobro: { label: 'Cobro', number: '573227477433' },
-    taller: { label: 'Taller (producción)', number: '573224602713' },
-  },
+    recipients: [
+      { id: 'cobro', label: 'Cobro', number: '573227477433', message: 'factura' },
+      { id: 'taller', label: 'Taller', number: '573224602713', message: 'diseno' },
+      { id: 'copia', label: 'Copia del pedido', number: '573106630055', message: 'completo' },
+    ],
+  } as { recipients: { id: string; label: string; number: string; message: 'factura' | 'diseno' | 'completo' }[] },
 
   /**
    * Dirección pública de la página (ej. "https://gorros.netlify.app/").
