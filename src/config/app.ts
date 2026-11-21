@@ -11,14 +11,15 @@ export const appConfig = {
 
   /**
    * PRECIOS (pesos colombianos).
-   * Total = precio base + precio por elemento × cantidad de elementos.
-   * Un "elemento" es cada texto (no vacío) o cada decoración aplicada al gorro.
-   * Editar un elemento existente no cambia el precio; solo añadir o eliminar.
+   * Total = precio base + precio por letra × letras + precio por diseño × diseños.
+   * Cada letra (o número/símbolo) de los textos se cobra por aparte; los espacios no se cobran.
+   *   Ej.: "Samuel" = 6 letras × $500 = $3.000 → total $5.500 con el gorro.
    */
   pricing: {
     currency: 'COP',
     basePrice: 2500,
-    pricePerElement: 500,
+    pricePerLetter: 500,
+    pricePerDecoration: 500,
   },
 
   /**
@@ -26,13 +27,12 @@ export const appConfig = {
    * Un solo botón va abriendo cada chat con el mensaje ya escrito.
    *   message: 'factura'  → detalle de precios y total (para cobrar)
    *            'diseno'   → textos, medidas, zonas y enlace 3D (para fabricar)
-   *            'completo' → factura + diseño en un solo mensaje
+   *            'completo' → factura + diseño en un solo mensaje (y se copia la imagen para pegarla)
    * Número: 57 + celular, sin "+" ni espacios. Para quitar un destinatario, borra su bloque.
    */
   whatsapp: {
     recipients: [
-      { id: 'cobro', label: 'Cobro', number: '573227477433', message: 'factura' },
-      { id: 'taller', label: 'Taller', number: '573224602713', message: 'diseno' },
+      { id: 'principal', label: 'Pedidos', number: '573227477433', message: 'completo' },
       { id: 'copia', label: 'Copia del pedido', number: '573106630055', message: 'completo' },
     ],
   } as { recipients: { id: string; label: string; number: string; message: 'factura' | 'diseno' | 'completo' }[] },

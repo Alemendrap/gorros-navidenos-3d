@@ -28,7 +28,7 @@ export function WelcomeOverlay() {
             {hasDraft || savedCount > 0 ? 'Continuar mi diseño' : 'Diseñar mi gorro'} <Icon name="next" size={18} />
           </button>
           <p className="text-sm text-oro-light">
-            Gorro desde <b>{formatPrice(appConfig.pricing.basePrice)}</b> · cada nombre o diseño +{formatPrice(appConfig.pricing.pricePerElement, false)}
+            Gorro desde <b>{formatPrice(appConfig.pricing.basePrice)}</b> · cada letra o diseño +{formatPrice(appConfig.pricing.pricePerLetter, false)}
           </p>
 
         </div>

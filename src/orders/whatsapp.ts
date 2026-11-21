@@ -29,10 +29,14 @@ export function buildInvoiceMessage(order: Order) {
     `Precio base: ${formatPrice(p.basePrice)}`,
   ];
   if (p.lines.length) {
-    lines.push('', `Elementos personalizados (${p.elementCount} × ${formatPrice(p.pricePerElement)}):`);
-    p.lines.forEach((l, i) => lines.push(`${i + 1}. ${l.label} — ${formatPrice(l.amount)}`));
+    lines.push('', 'Personalización:');
+    p.lines.forEach((l, i) => {
+      const qty = l.label.startsWith('Texto') ? `${l.quantity} ${l.quantity === 1 ? 'letra' : 'letras'} × ${formatPrice(l.unitPrice, false)}` : `1 diseño × ${formatPrice(l.unitPrice, false)}`;
+      lines.push(`${i + 1}. ${l.label}${l.detail ? ` (${l.detail})` : ''}`, `   ${qty} = ${formatPrice(l.amount)}`);
+    });
+    lines.push('', `Letras: ${p.letterCount} · Diseños: ${p.decorationCount}`);
   } else {
-    lines.push('Sin elementos personalizados');
+    lines.push('Sin personalización');
   }
   lines.push('', `*TOTAL A PAGAR: ${formatPrice(p.total)}*`, '', 'Estado: pendiente de pago');
   return lines.join('\n');
@@ -56,7 +60,7 @@ export function buildProductionMessage(order: Order) {
     lines.push(`${n++}. DISEÑO: *${d.name}*`, `   Zona: ${d.zone} · Alto ${cm(p.height)}${p.rotationDeg ? ` · Giro ${Math.round(p.rotationDeg)}°` : ''}${posicion(p.offset)}`);
   }
   if (n === 1) lines.push('Gorro sin personalización');
-  lines.push('', `Total elementos: ${order.pricing.elementCount}`, '', '👉 Ver el diseño en 3D:', designUrl(order.design, order.code));
+  lines.push('', '👉 Ver el diseño en 3D:', designUrl(order.design, order.code));
   return lines.join('\n');
 }
 
@@ -77,7 +81,7 @@ export type Recipient = (typeof appConfig.whatsapp.recipients)[number];
 export function messageFor(order: Order, r: Recipient) {
   if (r.message === 'factura') return buildInvoiceMessage(order);
   if (r.message === 'diseno') return buildProductionMessage(order);
-  return `${buildInvoiceMessage(order)}\n\n————————————\n\n${buildProductionMessage(order)}`;
+  return `${buildInvoiceMessage(order)}\n\n————————————\n\n${buildProductionMessage(order)}\n\n🖼️ Imagen del diseño: se adjunta en este chat.`;
 }
 
 export const recipientLink = (order: Order, r: Recipient) => whatsappLink(r.number, messageFor(order, r));

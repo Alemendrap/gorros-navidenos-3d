@@ -35,7 +35,7 @@ Activación (una sola vez): en el repositorio → *Settings* → *Pages* → *So
 Para GitHub Pages gratuito el repositorio debe ser **público**.
 
 **Código QR:** la carpeta `qr/` tiene el QR (`qr-gorros.png`, `qr-gorros.svg` para imprimir en grande)
-y un cartel listo para imprimir (`cartel-qr.png`). Apuntan a la dirección de arriba.
+y un cartel listo para imprimir (`cartel-qr.png`, con los precios por letra). Apuntan a la dirección de arriba.
 Si cambias de dirección, actualiza también `publicUrl` en `src/config/app.ts` y genera un QR nuevo.
 
 Alternativas: Netlify o Vercel (importar el repositorio; build `npm run build`, carpeta `dist`).
@@ -79,12 +79,12 @@ La app vende **un solo gorro** (rojo con borde blanco), con **personalizaciones 
 
 ### Precios (`src/config/app.ts` → `pricing`)
 ```ts
-pricing: { currency: 'COP', basePrice: 2500, pricePerElement: 500 }
+pricing: { currency: 'COP', basePrice: 2500, pricePerLetter: 500, pricePerDecoration: 500 }
 ```
-Total = precio base + precio por elemento × cantidad de elementos.
-Cada texto (no vacío) y cada diseño aplicado cuenta como un elemento **una sola vez**: editar su
-texto, tamaño, posición o zona no lo vuelve a cobrar. Sin impuestos ni cargos extra.
-Ejemplos: sin personalización $2.500 COP · 1 elemento $3.000 · 2 → $3.500 · 3 → $4.000 · 4 → $4.500.
+Total = $2.500 + **$500 por cada letra** + **$500 por cada diseño**.
+Se cobra cada letra, número o símbolo; los espacios no. Sin impuestos ni cargos extra.
+Ejemplos: sin personalizar $2.500 · «Samuel» (6 letras) $5.500 · «Ana María» (8 letras) $6.500 ·
+«Samuel» + una estrella $6.000.
 
 ### Tipografía definitiva
 Hoy se usa **Great Vibes como provisional**. Para cambiarla:
@@ -121,20 +121,18 @@ Cada zona define: `id`, `name`, posición (`anchor.azimuthDeg` 0 = frente, 90 = 
    ```
    Si el archivo no carga, la app muestra el gorro provisional en su lugar.
 
-### WhatsApp: destinatarios del pedido (`src/config/app.ts` → `whatsapp.recipients`)
-Al confirmar, un **solo botón** va abriendo cada chat con el mensaje ya escrito
-(el cliente pulsa Enviar en WhatsApp y vuelve a la página para el siguiente):
+### WhatsApp: a quién se envía el pedido (`src/config/app.ts` → `whatsapp.recipients`)
+Al confirmar, un botón va abriendo cada chat con el mensaje ya escrito; el cliente pulsa Enviar
+en WhatsApp y vuelve a la página para el siguiente:
 
-| # | Destinatario | Número | Recibe |
-|---|---|---|---|
-| 1 | Cobro | 322 747 7433 | Factura: detalle de precios y total |
-| 2 | Taller | 322 460 2713 | Diseño: textos, zonas, medidas en cm y enlace 3D |
-| 3 | Copia del pedido | 310 663 0055 | Factura + diseño |
+| # | Número | Recibe |
+|---|---|---|
+| 1 | 322 747 7433 | Factura (letras, diseños, total) + datos del diseño y enlace 3D + imagen |
+| 2 | 310 663 0055 | Lo mismo (copia) |
 
-Para cambiar, añadir o quitar destinatarios edita esa lista (número con 57 delante, sin "+").
-El avance del envío se guarda: si el celular recarga la página al volver de WhatsApp, continúa donde iba.
-WhatsApp no permite que una página envíe mensajes sola: el envío 100 % automático requiere la
-API de WhatsApp Business con un servidor.
+La imagen del diseño se copia automáticamente para pegarla en el chat (o se envía con «Compartir la imagen»).
+Para cambiar, añadir o quitar números edita esa lista (57 + celular, sin "+").
+El avance se guarda: si el celular recarga la página al volver de WhatsApp, continúa donde iba.
 
 ## 5. Flujo del cliente
 Inicio → personalizar (Nombre · Diseños · Zonas, con total en vivo) → Resumen de compra

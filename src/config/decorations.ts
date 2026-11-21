@@ -10,7 +10,7 @@ import type { DecorationCategory, DecorationConfig } from '@/types';
  *   2. Añade una entrada aquí abajo con su id, nombre y archivo.
  * Para ocultar uno sin borrarlo: enabled: false.
  *
- * El precio de cada diseño lo define appConfig.pricing.pricePerElement.
+ * El precio de cada diseño lo define appConfig.pricing.pricePerDecoration.
  */
 export const decorationCategories: DecorationCategory[] = [{ id: 'disenos', label: 'Diseños' }];
 

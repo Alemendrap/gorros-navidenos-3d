@@ -52,7 +52,7 @@ export function DecorationEditor({ product }: { product: ProductConfig }) {
       <div>
         <div className="mb-2 flex items-baseline justify-between">
           <p className="label">Diseños disponibles</p>
-          <span className="text-xs font-semibold text-oro-dark">+{formatPrice(appConfig.pricing.pricePerElement, false)} c/u</span>
+          <span className="text-xs font-semibold text-oro-dark">+{formatPrice(appConfig.pricing.pricePerDecoration, false)} c/u</span>
         </div>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-3">
           {list.map((d) => {

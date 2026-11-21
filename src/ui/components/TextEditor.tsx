@@ -5,7 +5,7 @@ import { useDesign } from '@/store/designStore';
 import { measureTextAspect } from '@/engine/rasterize';
 import { useFontStore } from '@/engine/fontLoader';
 import { cameraActions } from '@/viewer/sceneBridge';
-import { formatPrice } from '@/orders/pricing';
+import { countLetters, formatPrice } from '@/orders/pricing';
 import { ItemTransformControls } from './ItemTransformControls';
 import { ZonePicker } from './ZonePicker';
 import { Icon } from './Icon';
@@ -53,7 +53,7 @@ export function TextEditor({ product, onTyping }: { product: ProductConfig; onTy
             <span className="block font-display text-xl font-semibold text-tinta">Escribe un nombre</span>
             <span className="text-sm text-tinta/60">Letras de vinilo dorado sobre tu gorro.</span>
           </span>
-          <span className="shrink-0 rounded-full bg-oro/15 px-2.5 py-1 text-xs font-semibold text-oro-dark">+{formatPrice(appConfig.pricing.pricePerElement, false)}</span>
+          <span className="shrink-0 rounded-full bg-oro/15 px-2.5 py-1 text-xs font-semibold text-oro-dark">{formatPrice(appConfig.pricing.pricePerLetter, false)} por letra</span>
         </button>
       )}
 
@@ -62,7 +62,9 @@ export function TextEditor({ product, onTyping }: { product: ProductConfig; onTy
           <div>
             <div className="mb-1.5 flex items-baseline justify-between">
               <label htmlFor="txt-input" className="label">Tu texto</label>
-              <span className="text-xs tabular-nums text-tinta/50">{Array.from(item.text).length}/{zone.maxChars}</span>
+              <span className="text-xs tabular-nums text-tinta/50">
+                {countLetters(item.text)} {countLetters(item.text) === 1 ? 'letra' : 'letras'} · <b className="text-oro-dark">{formatPrice(countLetters(item.text) * appConfig.pricing.pricePerLetter)}</b> · {Array.from(item.text).length}/{zone.maxChars}
+              </span>
             </div>
             <div className="flex gap-2">
               <input

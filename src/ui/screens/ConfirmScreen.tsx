@@ -32,7 +32,7 @@ export function ConfirmScreen() {
   const onSend = async (r: Recipient) => {
     markSent(r.id);
     if (r.message !== 'factura' && image && (await copyImageToClipboard(image))) {
-      notify('Imagen del diseño copiada: puedes pegarla en el chat', 'ok');
+      notify('Imagen copiada: pégala en el chat de WhatsApp', 'ok');
     }
   };
 
@@ -90,7 +90,7 @@ export function ConfirmScreen() {
                 </span>
                 <span className="min-w-0 flex-1 text-sm">
                   <b>{r.label}</b> · {phone(r.number)}
-                  <span className="block text-xs text-tinta/50">{r.message === 'factura' ? 'Factura para el cobro' : r.message === 'diseno' ? 'Diseño para fabricar (con enlace 3D)' : 'Factura + diseño'}</span>
+                  <span className="block text-xs text-tinta/50">{r.message === 'factura' ? 'Factura para el cobro' : r.message === 'diseno' ? 'Diseño para fabricar (con enlace 3D)' : 'Factura e imagen del diseño'}</span>
                 </span>
                 <a href={recipientLink(order, r)} target="_blank" rel="noopener noreferrer" onClick={() => onSend(r)} className="text-xs font-semibold text-pino underline" data-testid={`send-${r.id}`}>
                   {sent[r.id] ? 'Reenviar' : 'Enviar'}
@@ -104,7 +104,8 @@ export function ConfirmScreen() {
             </button>
           )}
           <p className="text-center text-[11px] text-tinta/50">
-            WhatsApp se abre con el mensaje ya escrito: pulsa <b>Enviar</b> y vuelve aquí para el siguiente.
+            WhatsApp se abre con la factura ya escrita: pulsa <b>Enviar</b>. La imagen queda copiada:
+            mantén presionado el campo de mensaje y elige <b>Pegar</b> (o usa «Compartir la imagen»). Luego vuelve aquí para el siguiente.
           </p>
         </div>
 

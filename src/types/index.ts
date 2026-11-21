@@ -195,15 +195,21 @@ export type OrderStatus = 'borrador' | 'confirmado' | 'enviado' | 'en_produccion
 export interface OrderLine {
   label: string;
   detail: string;
+  /** Cantidad cobrada (letras de un texto o 1 diseño). */
+  quantity: number;
+  unitPrice: number;
   amount: number;
 }
 
 export interface Pricing {
   currency: string;
   basePrice: number;
-  pricePerElement: number;
-  /** Cantidad de elementos personalizados cobrables. */
-  elementCount: number;
+  pricePerLetter: number;
+  pricePerDecoration: number;
+  /** Letras cobradas (sin espacios) en todos los textos. */
+  letterCount: number;
+  /** Diseños (decoraciones) aplicados. */
+  decorationCount: number;
   lines: OrderLine[];
   total: number;
 }

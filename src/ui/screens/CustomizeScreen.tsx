@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { catalog } from '@/config';
-import { computePricing, formatPrice } from '@/orders/pricing';
+import { computePricing, formatPrice, quantitiesLabel } from '@/orders/pricing';
 import { useDesign, useCurrentProduct, type PanelTab } from '@/store/designStore';
 import { Sheet } from '../components/Sheet';
 import { ViewerControls } from '../components/ViewerControls';
@@ -101,7 +101,7 @@ export function CustomizePanel() {
             <button className="btn-primary flex-1 !justify-between !pl-5 !pr-4" onClick={() => go('preview')} data-testid="go-preview">
               <span className="flex flex-col items-start leading-tight">
                 <span className="text-[15px]">Revisar diseño</span>
-                <span className="text-[11px] font-medium opacity-80">{pricing.elementCount} {pricing.elementCount === 1 ? 'elemento' : 'elementos'} · {formatPrice(pricing.total)}</span>
+                <span className="text-[11px] font-medium opacity-80">{quantitiesLabel(pricing)} · {formatPrice(pricing.total)}</span>
               </span>
               <Icon name="next" size={18} />
             </button>
