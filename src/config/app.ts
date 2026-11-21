@@ -22,10 +22,23 @@ export const appConfig = {
   },
 
   /**
-   * Número de WhatsApp del negocio en formato internacional sin "+" ni espacios
-   * (ej. "573001234567"). Vacío = el cliente elige a quién enviarlo.
+   * WHATSAPP — al confirmar, el cliente envía dos mensajes:
+   *  - cobro: la FACTURA (detalle y total) para quien recibe el pago.
+   *  - taller: el DISEÑO (textos, posiciones, imagen y enlace 3D) para quien fabrica el gorro.
+   * Formato internacional sin "+" ni espacios: 57 + número de celular (ej. "573001234567").
+   * Si un número queda vacío, WhatsApp deja que el cliente elija el contacto.
    */
-  whatsappNumber: '',
+  whatsapp: {
+    cobro: { label: 'Cobro', number: '573227477433' },
+    taller: { label: 'Taller (producción)', number: '573224602713' },
+  },
+
+  /**
+   * Dirección pública de la página (ej. "https://gorros.netlify.app/").
+   * Se usa en el enlace "Ver diseño en 3D" que recibe el taller.
+   * Vacío = se usa la dirección desde la que el cliente abrió la página.
+   */
+  publicUrl: '',
 
   features: {
     /** Interruptor global del módulo de decoraciones. */

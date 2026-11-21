@@ -34,6 +34,9 @@ interface DesignState {
   autoRotate: boolean;
   saved: SavedDesign[];
   notice: Notice | null;
+  /** Código de pedido cuando se está viendo un diseño recibido por enlace (vista del taller). */
+  sharedCode: string | null;
+  openShared: (design: Design, code: string) => void;
 
   go: (s: Screen) => void;
   setTab: (t: PanelTab) => void;
@@ -85,6 +88,8 @@ export const useDesign = create<DesignState>()(
         autoRotate: false,
         saved: [],
         notice: null,
+        sharedCode: null,
+        openShared: (design, code) => set({ design, sharedCode: code || 'sin código', screen: 'preview', selectedItemId: null, activeZoneId: null, autoRotate: false }),
 
         go: (screen) => set({ screen, autoRotate: screen === 'welcome', selectedItemId: screen === 'customize' ? get().selectedItemId : null }),
         setTab: (tab) => set({ tab }),

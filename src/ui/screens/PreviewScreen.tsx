@@ -8,14 +8,16 @@ import { PriceSummary } from '../components/PriceSummary';
 import { Icon } from '../components/Icon';
 import { useDesignActions } from '../useDesignActions';
 import { SavedDesignsModal } from '../components/SavedDesignsModal';
+import { ProductionDetails } from '../components/ProductionDetails';
 
 export function PreviewOverlay() {
   const go = useDesign((s) => s.go);
+  const sharedCode = useDesign((s) => s.sharedCode);
   return (
     <>
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-between p-3 pt-[calc(env(safe-area-inset-top)+12px)]">
-        <button className="btn-outline pointer-events-auto !min-h-[44px]" onClick={() => go('customize')}><Icon name="back" size={18} /> Editar</button>
-        <p className="rounded-full bg-white/80 px-4 py-2 font-display text-lg font-semibold shadow-sm backdrop-blur">Tu diseño</p>
+        {sharedCode ? <span className="w-[92px]" /> : <button className="btn-outline pointer-events-auto !min-h-[44px]" onClick={() => go('customize')}><Icon name="back" size={18} /> Editar</button>}
+        <p className="whitespace-nowrap rounded-full bg-white/80 px-4 py-2 font-display text-lg font-semibold shadow-sm backdrop-blur">{sharedCode ? `Pedido ${sharedCode}` : 'Tu diseño'}</p>
         <span className="w-[92px]" />
       </div>
       <div className="pointer-events-none absolute right-3 top-1/2 z-10 -translate-y-1/2">
@@ -34,6 +36,17 @@ export function PreviewPanel() {
   const [showSaved, setShowSaved] = useState(false);
   const { busy, save, download, confirm } = useDesignActions();
   const pricing = computePricing(design);
+  const sharedCode = useDesign((s) => s.sharedCode);
+
+  // Vista del taller: el diseño llegó por enlace; solo se muestra la ficha de producción.
+  if (sharedCode) {
+    return (
+      <Sheet open={open} onToggle={setOpen} header={<p className="font-display text-2xl font-semibold">Ficha de producción</p>}
+        footer={<button className="btn-outline w-full" onClick={download} disabled={busy !== null}><Icon name="download" size={18} /> {busy === 'download' ? 'Creando…' : 'Descargar imagen'}</button>}>
+        <ProductionDetails design={design} />
+      </Sheet>
+    );
+  }
 
   return (
     <>

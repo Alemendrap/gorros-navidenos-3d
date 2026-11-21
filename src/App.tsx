@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Viewer } from '@/viewer/Viewer';
 import { cameraActions } from '@/viewer/sceneBridge';
+import { readSharedDesignFromUrl } from '@/lib/designLink';
 import { useDesign } from '@/store/designStore';
 import { preloadFonts } from '@/engine/fontLoader';
 import { useAppHeight } from '@/lib/useAppHeight';
@@ -13,13 +14,19 @@ import { ConfirmScreen } from '@/ui/screens/ConfirmScreen';
 export default function App() {
   useAppHeight();
   const screen = useDesign((s) => s.screen);
-  useEffect(() => { preloadFonts(); }, []);
+  useEffect(() => {
+    preloadFonts();
+    // Enlace de diseño recibido por el taller (#d=...): se abre directamente en la vista de producción.
+    const shared = readSharedDesignFromUrl();
+    if (shared) useDesign.getState().openShared(shared.design, shared.code);
+  }, []);
   // La revisión final siempre empieza mirando el gorro de frente.
   useEffect(() => { if (screen === 'preview') cameraActions.reset(); }, [screen]);
 
   // Botón "atrás" del navegador/teléfono navega entre pantallas.
   useEffect(() => {
     const order = ['welcome', 'customize', 'preview', 'confirm'] as const;
+    if (useDesign.getState().sharedCode) return; // en la vista del taller no se toca el enlace
     if (location.hash !== `#${screen}`) history.pushState(null, '', `#${screen}`);
     const onPop = () => {
       const s = location.hash.slice(1) as (typeof order)[number];

@@ -115,8 +115,15 @@ Cada zona define: `id`, `name`, posición (`anchor.azimuthDeg` 0 = frente, 90 = 
    ```
    Si el archivo no carga, la app muestra el gorro provisional en su lugar.
 
-### WhatsApp
-Pon el número del negocio en `appConfig.whatsappNumber` (ej. `573001234567`).
+### WhatsApp: factura y diseño (`src/config/app.ts` → `whatsapp`)
+Al confirmar, el cliente envía **dos mensajes** (WhatsApp se abre con el texto ya escrito; solo pulsa Enviar):
+1. **Factura** → número de **cobro** (`whatsapp.cobro.number`, hoy 322 747 7433): detalle, precios y total.
+2. **Diseño** → número del **taller** (`whatsapp.taller.number`, hoy 322 460 2713): textos, zonas, medidas en cm,
+   giros y un **enlace para ver el gorro en 3D** con la ficha de producción. La imagen se copia al portapapeles
+   para pegarla en el chat (o se comparte con el botón «Compartir la imagen del diseño»).
+
+Los números van con el 57 delante, sin "+" ni espacios. Cuando publiques la página, pon su dirección en
+`publicUrl` (ej. `https://gorros.netlify.app/`) para que el enlace 3D del taller apunte ahí.
 
 ## 5. Flujo del cliente
 Inicio → personalizar (Nombre · Diseños · Zonas, con total en vivo) → Resumen de compra
