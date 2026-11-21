@@ -23,16 +23,20 @@ npm run build      # compila a /dist (verifica tipos TypeScript)
 npm run preview    # sirve /dist en http://localhost:4173
 ```
 
-## 2. Publicar en internet
+## 2. Publicar en internet (sin anuncios)
 
-La carpeta `dist/` es un sitio estático; funciona en cualquier hosting (usa rutas relativas).
+El proyecto se publica **solo** en GitHub Pages: cada vez que se suben cambios a la rama `main`,
+`.github/workflows/deploy.yml` compila y publica la página en
+**https://alemendrap.github.io/gorros-navidenos-3d/** (gratis, sin anuncios, con HTTPS).
 
-- **Netlify:** arrastra la carpeta `dist` a https://app.netlify.com/drop, o conecta el repositorio
-  con *Build command* `npm run build` y *Publish directory* `dist`.
-- **Vercel:** importa el repositorio; Vercel detecta Vite automáticamente.
-- **GitHub Pages / Cloudflare Pages / hosting propio:** sube el contenido de `dist/`.
+Activación (una sola vez): en el repositorio → *Settings* → *Pages* → *Source*: **GitHub Actions**.
+Para GitHub Pages gratuito el repositorio debe ser **público**.
 
-Usa siempre **HTTPS** (necesario para compartir imágenes desde el móvil).
+**Código QR:** la carpeta `qr/` tiene el QR (`qr-gorros.png`, `qr-gorros.svg` para imprimir en grande)
+y un cartel listo para imprimir (`cartel-qr.png`). Apuntan a la dirección de arriba.
+Si cambias de dirección, actualiza también `publicUrl` en `src/config/app.ts` y genera un QR nuevo.
+
+Alternativas: Netlify o Vercel (importar el repositorio; build `npm run build`, carpeta `dist`).
 
 ## 3. Estructura
 

@@ -38,7 +38,7 @@ export const appConfig = {
    * Se usa en el enlace "Ver diseño en 3D" que recibe el taller.
    * Vacío = se usa la dirección desde la que el cliente abrió la página.
    */
-  publicUrl: '',
+  publicUrl: 'https://alemendrap.github.io/gorros-navidenos-3d/',
 
   features: {
     /** Interruptor global del módulo de decoraciones. */
