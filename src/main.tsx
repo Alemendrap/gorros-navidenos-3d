@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client';
 import '@/styles/index.css';
 import '@/config/fonts';
 import App from './App';
+import { startAutoUpdate } from '@/lib/autoUpdate';
+
+startAutoUpdate();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
