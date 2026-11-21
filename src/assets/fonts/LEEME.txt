@@ -1,0 +1,2 @@
+Coloca aquí el archivo de la tipografía definitiva (.woff2 recomendado, o .woff/.ttf/.otf).
+Luego sigue los pasos de src/config/fonts.ts.

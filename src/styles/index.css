@@ -1,0 +1,109 @@
+@import '@fontsource/cormorant-garamond/latin-500.css';
+@import '@fontsource/cormorant-garamond/latin-600.css';
+@import '@fontsource/cormorant-garamond/latin-700.css';
+@import '@fontsource/montserrat/latin-400.css';
+@import '@fontsource/montserrat/latin-500.css';
+@import '@fontsource/montserrat/latin-600.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --app-h: 100dvh;
+  --app-top: 0px;
+  color-scheme: light;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: #FBF6EC;
+  color: #2A1A14;
+  font-family: Montserrat, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+.app-root {
+  position: fixed;
+  left: 0; right: 0;
+  top: var(--app-top);
+  height: var(--app-h);
+  overflow: hidden;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 min-h-[48px] text-[15px] font-semibold tracking-wide
+      transition-all duration-200 active:scale-[.97] disabled:opacity-40 disabled:pointer-events-none select-none;
+  }
+  .btn-primary { @apply btn bg-navidad text-white shadow-[0_8px_24px_-8px_rgba(179,18,46,.7)] hover:bg-navidad-light; }
+  .btn-gold { @apply btn text-tinta shadow-glow; background: linear-gradient(135deg,#F3DE9E 0%,#D4AE57 50%,#B58C34 100%); }
+  .btn-outline { @apply btn border border-tinta/15 bg-white/70 text-tinta hover:bg-white backdrop-blur; }
+  .btn-ghost { @apply btn bg-transparent text-tinta/80 hover:bg-tinta/5; }
+  .btn-danger { @apply btn border border-navidad/30 bg-white text-navidad hover:bg-navidad/5; }
+  .icon-btn {
+    @apply inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/85 text-tinta shadow-md backdrop-blur
+      transition active:scale-95 hover:bg-white disabled:opacity-40;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-4 min-h-[40px] text-sm font-medium transition;
+  }
+  .chip-on { @apply chip border-oro bg-oro/15 text-tinta shadow-[inset_0_0_0_1px_rgba(201,162,74,.6)]; }
+  .chip-off { @apply chip border-tinta/10 bg-white text-tinta/80 hover:border-oro/50; }
+  .label { @apply text-[11px] font-semibold uppercase tracking-[.16em] text-tinta/55; }
+  .card { @apply rounded-2xl border border-tinta/10 bg-white/80 shadow-sm; }
+  .badge-demo { @apply rounded-full bg-pino/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-pino; }
+}
+
+/* Deslizadores dorados, grandes para dedos */
+input[type='range'] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 32px; background: transparent;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  height: 6px; border-radius: 99px;
+  background: linear-gradient(90deg,#C9A24A var(--fill,50%), rgba(42,26,20,.12) var(--fill,50%));
+}
+input[type='range']::-moz-range-track { height: 6px; border-radius: 99px; background: rgba(42,26,20,.12); }
+input[type='range']::-moz-range-progress { height: 6px; border-radius: 99px; background: #C9A24A; }
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none; margin-top: -11px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #fff; border: 2px solid #C9A24A; box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+input[type='range']::-moz-range-thumb {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #fff; border: 2px solid #C9A24A; box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+.bg-studio {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 42%, #FFFDF8 0%, #F7EEDD 55%, #EADBC0 100%);
+}
+.bg-night {
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 45%, rgba(231,205,134,.28) 0%, rgba(231,205,134,0) 60%),
+    radial-gradient(ellipse at 50% 120%, #2E6B52 0%, #12321F 55%, #0B1F14 100%);
+}
+
+.snowflake {
+  position: absolute; top: -10px; color: #fff; pointer-events: none;
+  animation-name: fall; animation-timing-function: linear; animation-iteration-count: infinite;
+  will-change: transform;
+}
+@keyframes fall { from { transform: translate3d(0,-10vh,0); } to { transform: translate3d(var(--drift,0px),110vh,0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .snowflake { display: none; }
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+@media (max-width: 1023px) {
+  .typing [data-typing-hide] { display: none; }
+}

@@ -1,0 +1,12 @@
+/*
+ * Tipografía definitiva de los textos del gorro.
+ * Descomenta y ajusta cuando tengas el archivo (ver src/config/fonts.ts).
+ *
+ * @font-face {
+ *   font-family: 'Letra Gorros';
+ *   src: url('../assets/fonts/mi-letra.woff2') format('woff2');
+ *   font-weight: 400;
+ *   font-style: normal;
+ *   font-display: block;
+ * }
+ */
